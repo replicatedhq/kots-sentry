@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sentry-sentry
+  annotations:
+  labels:
+    app: sentry-sentry
+    chart: "sentry-2.0.1"
+    release: "release-name"
+    heritage: "Tiller"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 9000
+    targetPort: 9000
+    protocol: TCP
+    name: sentry
+  selector:
+    app: sentry-sentry
+    role: web
