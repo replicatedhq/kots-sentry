@@ -4,9 +4,6 @@ metadata:
   name: sentry-redis-slave
   labels:
     app: redis
-    chart: redis-3.8.1
-    release: "release-name"
-    heritage: "Tiller"
 spec:
   replicas: 1
   template:

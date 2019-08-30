@@ -4,9 +4,6 @@ metadata:
   name: sentry-redis-master
   labels:
     app: redis
-    chart: redis-3.8.1
-    release: "release-name"
-    heritage: "Tiller"
 spec:
   selector:
     matchLabels:
@@ -75,10 +72,7 @@ spec:
         name: redis-data
         labels:
           app: "redis"
-          chart: redis-3.8.1
           component: "master"
-          release: "release-name"
-          heritage: "Tiller"
       spec:
         accessModes:
           - "ReadWriteOnce"

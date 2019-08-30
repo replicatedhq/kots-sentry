@@ -1,39 +1,27 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: sentry-sentry-worker
+  name: "sentry-user-create"
   labels:
-    app: sentry-sentry
-    chart: "sentry-2.0.1"
-    release: "release-name"
-    heritage: "Tiller"
+    app: sentry
 spec:
-  replicas: 2
   template:
     metadata:
-      annotations:
-        metrics-enabled: "false"
-        checksum/configYml: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-        checksum/sentryConfPy: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      name: "sentry-user-create"
       labels:
-        app: sentry-sentry
+        app: sentry
         release: "release-name"
-        role: worker
     spec:
+      restartPolicy: Never
       containers:
-      - name: sentry-workers
+      - name: user-create-job
         image: "sentry:9.1.1"
-        imagePullPolicy: IfNotPresent
-        args:
-          - "run"
-          - "worker"
-        ports:
-        - containerPort: 9000
+        command: ["sentry","createuser","--no-input","--email", "admin@sentry.local", "--superuser","--password","$(SENTRY_USER_PASSWORD)"]
         env:
         - name: SENTRY_SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: sentry-sentry
+              name: sentry
               key: sentry-secret
         - name: SENTRY_DB_USER
           value: "sentry"
@@ -58,38 +46,30 @@ spec:
         - name: SENTRY_REDIS_PORT
           value: "6379"
         - name: SENTRY_EMAIL_HOST
-          value: "smtp"
+          value: ""
         - name: SENTRY_EMAIL_PORT
-          value: "25"
+          value: ""
         - name: SENTRY_EMAIL_USER
           value: ""
         - name: SENTRY_EMAIL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: sentry-sentry
+              name: sentry
               key: smtp-password
+        - name: SENTRY_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sentry
+              key: user-password
         - name: SENTRY_EMAIL_USE_TLS
           value: "false"
         - name: SENTRY_SERVER_EMAIL
           value: "sentry@sentry.local"
-
         volumeMounts:
         - mountPath: /etc/sentry
           name: config
           readOnly: true
-        - mountPath: /var/lib/sentry/files
-          name: sentry-data
-        resources:
-            limits:
-              cpu: 300m
-              memory: 500Mi
-            requests:
-              cpu: 100m
-              memory: 100Mi
-
       volumes:
       - name: config
         configMap:
-          name: sentry-sentry
-      - name: sentry-data
-        emptyDir: {}
+          name: sentry

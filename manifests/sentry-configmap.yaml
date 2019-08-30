@@ -1,12 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: sentry-sentry
+  name: sentry
   labels:
-    app: sentry-sentry
-    chart: "sentry-2.0.1"
-    release: "release-name"
-    heritage: "Tiller"
+    app: sentry
 data:
   config.yml: |-
     # While a lot of configuration in Sentry can be changed via the UI, for all

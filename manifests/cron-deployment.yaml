@@ -1,36 +1,30 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
-  name: "sentry-db-init"
+  name: sentry-cron
   labels:
-    app: sentry-sentry
-    chart: "sentry-2.0.1"
-    release: "release-name"
-    heritage: "Tiller"
-  annotations:
-    # This is what defines this resource as a hook. Without this line, the
-    # job is considered part of the release.
-    "helm.sh/hook": "post-install,post-upgrade"
-    "helm.sh/hook-delete-policy": "hook-succeeded,before-hook-creation"
-    "helm.sh/hook-weight": "-5"
+    app: sentry
 spec:
+  replicas: 1
   template:
     metadata:
-      name: "sentry-db-init"
       labels:
-        app: sentry-sentry
+        app: sentry
         release: "release-name"
+        role: cron
     spec:
-      restartPolicy: Never
       containers:
-      - name: db-init-job
+      - name: sentry-cron
         image: "sentry:9.1.1"
-        command: ["sentry","upgrade","--noinput"]
+        imagePullPolicy: IfNotPresent
+        args: ["run", "cron"]
+        ports:
+        - containerPort: 9000
         env:
         - name: SENTRY_SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: sentry-sentry
+              name: sentry
               key: sentry-secret
         - name: SENTRY_DB_USER
           value: "sentry"
@@ -63,7 +57,7 @@ spec:
         - name: SENTRY_EMAIL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: sentry-sentry
+              name: sentry
               key: smtp-password
         - name: SENTRY_EMAIL_USE_TLS
           value: "false"
@@ -73,7 +67,19 @@ spec:
         - mountPath: /etc/sentry
           name: config
           readOnly: true
+        - mountPath: /var/lib/sentry/files
+          name: sentry-data
+        resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+
       volumes:
       - name: config
         configMap:
-          name: sentry-sentry
+          name: sentry
+      - name: sentry-data
+        emptyDir: {}

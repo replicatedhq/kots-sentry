@@ -1,37 +1,27 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: sentry-sentry-cron
+  name: "sentry-db-init"
   labels:
-    app: sentry-sentry
-    chart: "sentry-2.0.1"
-    release: "release-name"
-    heritage: "Tiller"
+    app: sentry
 spec:
-  replicas: 1
   template:
     metadata:
-      annotations:
-        metrics-enabled: "false"
-        checksum/configYml: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-        checksum/sentryConfPy: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      name: "sentry-db-init"
       labels:
-        app: sentry-sentry
+        app: sentry
         release: "release-name"
-        role: cron
     spec:
+      restartPolicy: Never
       containers:
-      - name: sentry-cron
+      - name: db-init-job
         image: "sentry:9.1.1"
-        imagePullPolicy: IfNotPresent
-        args: ["run", "cron"]
-        ports:
-        - containerPort: 9000
+        command: ["sentry","upgrade","--noinput"]
         env:
         - name: SENTRY_SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: sentry-sentry
+              name: sentry
               key: sentry-secret
         - name: SENTRY_DB_USER
           value: "sentry"
@@ -64,7 +54,7 @@ spec:
         - name: SENTRY_EMAIL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: sentry-sentry
+              name: sentry
               key: smtp-password
         - name: SENTRY_EMAIL_USE_TLS
           value: "false"
@@ -74,19 +64,7 @@ spec:
         - mountPath: /etc/sentry
           name: config
           readOnly: true
-        - mountPath: /var/lib/sentry/files
-          name: sentry-data
-        resources:
-            limits:
-              cpu: 200m
-              memory: 200Mi
-            requests:
-              cpu: 100m
-              memory: 100Mi
-
       volumes:
       - name: config
         configMap:
-          name: sentry-sentry
-      - name: sentry-data
-        emptyDir: {}
+          name: sentry

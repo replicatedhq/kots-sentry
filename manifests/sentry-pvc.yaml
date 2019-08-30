@@ -1,12 +1,9 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: sentry-sentry
+  name: sentry
   labels:
-    app: sentry-sentry
-    chart: "sentry-2.0.1"
-    release: "release-name"
-    heritage: "Tiller"
+    app: sentry
 spec:
   accessModes:
     - "ReadWriteOnce"

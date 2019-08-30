@@ -4,10 +4,6 @@ metadata:
   name: sentry-redis-slave
   labels:
     app: redis
-    chart: redis-3.8.1
-    release: "release-name"
-    heritage: "Tiller"
-  annotations:
 spec:
   type: ClusterIP
   ports:

@@ -1,36 +1,29 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
-  name: "sentry-user-create"
+  name: sentry-web
   labels:
-    app: sentry-sentry
-    chart: "sentry-2.0.1"
-    release: "release-name"
-    heritage: "Tiller"
-  annotations:
-    # This is what defines this resource as a hook. Without this line, the
-    # job is considered part of the release.
-    "helm.sh/hook": post-install
-    "helm.sh/hook-delete-policy": "hook-succeeded,before-hook-creation"
-    "helm.sh/hook-weight": "5"
+    app: sentry
 spec:
+  replicas: 1
   template:
     metadata:
-      name: "sentry-user-create"
       labels:
-        app: sentry-sentry
+        app: sentry
         release: "release-name"
+        role: web
     spec:
-      restartPolicy: Never
       containers:
-      - name: user-create-job
+      - name: sentry-web
         image: "sentry:9.1.1"
-        command: ["sentry","createuser","--no-input","--email", "admin@sentry.local", "--superuser","--password","$(SENTRY_USER_PASSWORD)"]
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9000
         env:
         - name: SENTRY_SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: sentry-sentry
+              name: sentry
               key: sentry-secret
         - name: SENTRY_DB_USER
           value: "sentry"
@@ -55,30 +48,64 @@ spec:
         - name: SENTRY_REDIS_PORT
           value: "6379"
         - name: SENTRY_EMAIL_HOST
-          value: ""
+          value: "smtp"
         - name: SENTRY_EMAIL_PORT
-          value: ""
+          value: "25"
         - name: SENTRY_EMAIL_USER
           value: ""
         - name: SENTRY_EMAIL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: sentry-sentry
+              name: sentry
               key: smtp-password
-        - name: SENTRY_USER_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: sentry-sentry
-              key: user-password
         - name: SENTRY_EMAIL_USE_TLS
           value: "false"
         - name: SENTRY_SERVER_EMAIL
           value: "sentry@sentry.local"
+
+        - name: GITHUB_APP_ID
+          value: ""
+        - name: GITHUB_API_SECRET
+          value: ""
+
         volumeMounts:
         - mountPath: /etc/sentry
           name: config
           readOnly: true
+        - mountPath: /var/lib/sentry/files
+          name: sentry-data
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /_health/
+            port: 9000
+            scheme: HTTP
+          initialDelaySeconds: 50
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        readinessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /_health/
+            port: 9000
+            scheme: HTTP
+          initialDelaySeconds: 50
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 300m
+              memory: 300Mi
+
       volumes:
       - name: config
         configMap:
-          name: sentry-sentry
+          name: sentry
+      - name: sentry-data
+        persistentVolumeClaim:
+          claimName: sentry

@@ -1,36 +1,32 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: sentry-sentry-web
+  name: sentry-worker
   labels:
-    app: sentry-sentry
-    chart: "sentry-2.0.1"
-    release: "release-name"
-    heritage: "Tiller"
+    app: sentry
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
-      annotations:
-        metrics-enabled: "false"
-        checksum/configYml: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-        checksum/sentryConfPy: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
       labels:
-        app: sentry-sentry
+        app: sentry
         release: "release-name"
-        role: web
+        role: worker
     spec:
       containers:
-      - name: sentry-web
+      - name: sentry-workers
         image: "sentry:9.1.1"
         imagePullPolicy: IfNotPresent
+        args:
+          - "run"
+          - "worker"
         ports:
         - containerPort: 9000
         env:
         - name: SENTRY_SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: sentry-sentry
+              name: sentry
               key: sentry-secret
         - name: SENTRY_DB_USER
           value: "sentry"
@@ -63,17 +59,12 @@ spec:
         - name: SENTRY_EMAIL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: sentry-sentry
+              name: sentry
               key: smtp-password
         - name: SENTRY_EMAIL_USE_TLS
           value: "false"
         - name: SENTRY_SERVER_EMAIL
           value: "sentry@sentry.local"
-
-        - name: GITHUB_APP_ID
-          value: ""
-        - name: GITHUB_API_SECRET
-          value: ""
 
         volumeMounts:
         - mountPath: /etc/sentry
@@ -81,38 +72,17 @@ spec:
           readOnly: true
         - mountPath: /var/lib/sentry/files
           name: sentry-data
-        livenessProbe:
-          failureThreshold: 5
-          httpGet:
-            path: /_health/
-            port: 9000
-            scheme: HTTP
-          initialDelaySeconds: 50
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 2
-        readinessProbe:
-          failureThreshold: 10
-          httpGet:
-            path: /_health/
-            port: 9000
-            scheme: HTTP
-          initialDelaySeconds: 50
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 2
         resources:
             limits:
-              cpu: 500m
+              cpu: 300m
               memory: 500Mi
             requests:
-              cpu: 300m
-              memory: 300Mi
+              cpu: 100m
+              memory: 100Mi
 
       volumes:
       - name: config
         configMap:
-          name: sentry-sentry
+          name: sentry
       - name: sentry-data
-        persistentVolumeClaim:
-          claimName: sentry-sentry
+        emptyDir: {}
