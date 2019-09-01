@@ -1,7 +1,7 @@
 apiVersion: troubleshoot.replicated.com/v1beta1
 kind: Collector
 metadata:
-  name: collector-sample
+  name: sentry-enterprise
 spec:
   collectors:
     - secret:
@@ -11,8 +11,8 @@ spec:
         includeValue: false
     - logs:
         selector:
-          - name=cilium-operator
-        namespace: kube-system
+          - app=sentry
+          - role=worker
         limits:
           maxAge: 30d
           maxLines: 10000

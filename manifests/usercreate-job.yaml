@@ -16,7 +16,7 @@ spec:
       containers:
       - name: user-create-job
         image: "sentry:9.1.1"
-        command: ["sentry","createuser","--no-input","--email", "admin@sentry.local", "--superuser","--password","$(SENTRY_USER_PASSWORD)"]
+        command: ["sentry","createuser","--no-input","--email", "$(SENTRY_ADMIN_USERNAME)", "--superuser","--password","$(SENTRY_USER_PASSWORD)"]
         env:
         - name: SENTRY_SECRET_KEY
           valueFrom:
@@ -46,11 +46,11 @@ spec:
         - name: SENTRY_REDIS_PORT
           value: "6379"
         - name: SENTRY_EMAIL_HOST
-          value: ""
+          value: '{{repl ConfigOption "smtp_host"}}'
         - name: SENTRY_EMAIL_PORT
-          value: ""
+          value: '{{repl ConfigOption "smtp_port"}}'
         - name: SENTRY_EMAIL_USER
-          value: ""
+          value: '{{repl ConfigOption "smtp_user"}}'
         - name: SENTRY_EMAIL_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -61,6 +61,8 @@ spec:
             secretKeyRef:
               name: sentry
               key: user-password
+        - name: SENTRY_ADMIN_USERNAME
+          value: '{{repl ConfigOption "admin_username"}}'
         - name: SENTRY_EMAIL_USE_TLS
           value: "false"
         - name: SENTRY_SERVER_EMAIL

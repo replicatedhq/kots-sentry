@@ -4,6 +4,23 @@ metadata:
   name: sentry-enterprise
 spec:
   groups:
+    - name: sentry
+      title: Sentry
+      description: Sentry Defaults
+      items:
+        - name: admin_username
+          title: Admin Username
+          type: text
+          default: 'admin'
+        - name: admin_password
+          title: Admin Password
+          type: text
+          default: 'password'
+        - name: secret_key
+          title: Secret Key
+          type: password
+          hidden: true
+          value: "{{repl RandomString 40}}"
     - name: database
       title: Database
       description: Database Options
@@ -19,5 +36,4 @@ spec:
               title: External Postgres
         - name: embedded_postgres_password
           type: text
-          read_only: true
           value: "{{repl RandomString 32}}"
