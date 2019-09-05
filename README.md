@@ -39,5 +39,5 @@ kubectl kots install replicated://your-app-slug --namespace your-namespace --sha
 5. Clean up
 
 ```shell
-kubectl delete ns your-app-namespace
+kubectl delete ns your-namespace
 ```
