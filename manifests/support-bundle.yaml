@@ -6,7 +6,6 @@ spec:
   collectors:
     - secret:
         name: myapp-postgres
-        namespace: default
         key: uri
         includeValue: false
     - logs:
@@ -18,7 +17,6 @@ spec:
           maxLines: 10000
     - run:
         collectorName: ping-google
-        namespace: default
         image: flungo/netutils
         command: ["ping"]
         args: ["www.google.com"]
