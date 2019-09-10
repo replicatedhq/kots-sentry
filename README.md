@@ -6,8 +6,8 @@ This is a working demo for packaging Sentry as a Kots application.
 
 1. Create a new Kots application in the [Replicated Vendor Portal](https://vendor.replicated.com)
 
-* Create a new application, name it, and select 'Kots' when asked "How do you want to package your application?".  If the Kots option is not visible, email contact@replicated.com and we'll enable it.
-* Select the 'Releases' tab of the vendor portal, delete the default yaml files and upload all the files from the `manifests` directory of this repo.  These files include plain Kubernetes yaml for sample app (Sentry), along with the following Kots-specific yaml specs:
+* Create a new application, name it, and select 'Kots' when asked "How do you want to package your application?".  If the Kots option is not visible, email contact@replicated.com and we'll enable it. Alternatively, you can self-enable Kots through https://admin.replbiz.com, by enabling the following feature for your team: "Kots Vendor in Vendor Web"
+* Select the 'Releases' tab of the vendor portal, click "create release," delete the default yaml files and upload all the files from the `manifests` directory of this repo.  These files include plain Kubernetes yaml for sample app (Sentry), along with the following Kots-specific yaml specs:
 
     * replicated-app.yaml - specifies application title and icon, for display in the kots admin console
     * preflight.yaml - specifies tests to run against the target cluster, prior to deployment of the app
