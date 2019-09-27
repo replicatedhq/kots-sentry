@@ -5,6 +5,9 @@ metadata:
   labels:
     app: sentry
 spec:
+  selector:
+    matchLabels:
+      app: sentry-worker
   replicas: 2
   template:
     metadata:
