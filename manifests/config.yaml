@@ -14,7 +14,7 @@ spec:
           default: 'admin'
         - name: admin_password
           title: Admin Password
-          type: text
+          type: password
           default: 'password'
         - name: secret_key
           title: Secret Key
@@ -35,5 +35,5 @@ spec:
             - name: external_postgres
               title: External Postgres
         - name: embedded_postgres_password
-          type: text
+          type: password
           value: "{{repl RandomString 32}}"
