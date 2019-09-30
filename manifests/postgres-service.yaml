@@ -12,4 +12,3 @@ spec:
     targetPort: postgresql
   selector:
     app: postgresql
-    release: release-name

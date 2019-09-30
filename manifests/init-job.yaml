@@ -10,7 +10,6 @@ spec:
       name: "sentry-db-init"
       labels:
         app: sentry
-        release: "release-name"
     spec:
       restartPolicy: Never
       containers:

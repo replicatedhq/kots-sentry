@@ -8,14 +8,12 @@ spec:
   selector:
     matchLabels:
       app: postgresql
-      release: release-name
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: postgresql
-        release: release-name
     spec:
       containers:
       - name: sentry-postgresql

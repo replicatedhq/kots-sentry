@@ -13,7 +13,6 @@ spec:
     metadata:
       labels:
         app: sentry
-        release: "release-name"
         role: web
     spec:
       containers:
