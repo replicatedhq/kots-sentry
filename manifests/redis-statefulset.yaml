@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: sentry-redis-master
@@ -7,16 +7,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      release: "release-name"
-      chart: redis-3.8.1
       role: master
       app: redis
   serviceName: "redis-master"
   template:
     metadata:
       labels:
-        release: "release-name"
-        chart: redis-3.8.1
         role: master
         app: redis
     spec:

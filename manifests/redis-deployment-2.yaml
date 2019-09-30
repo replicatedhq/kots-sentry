@@ -5,12 +5,14 @@ metadata:
   labels:
     app: redis
 spec:
+  selector:
+    matchLabels:
+      role: slave
+      app: redis
   replicas: 1
   template:
     metadata:
       labels:
-        release: "release-name"
-        chart: redis-3.8.1
         role: slave
         app: redis
     spec:
