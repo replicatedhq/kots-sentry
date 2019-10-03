@@ -1,0 +1,28 @@
+apiVersion: app.k8s.io/v1beta1
+kind: Application
+metadata:
+  name: "sentry"
+  labels:
+    app.kubernetes.io/name: "sentry"
+    app.kubernetes.io/version: "9.1.1"
+spec:
+  selector:
+    matchLabels:
+     app.kubernetes.io/name: "sentry"
+  componentKinds:
+    - group: core
+      kind: Service
+    - group: apps
+      kind: Deployment
+    - group: apps
+      kind: StatefulSet
+  descriptor:
+    version: "9.1.1"
+    description: "Open-source error tracking with full stacktraces & asynchronous context."
+    icons:
+      - src: "https://sentry-brand.storage.googleapis.com/sentry-glyph-black.png"
+        type: "image/png"
+    type: "sentry"
+    links:
+      - description: Dashboard
+        url: "http://sentry"

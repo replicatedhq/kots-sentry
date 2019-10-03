@@ -5,3 +5,8 @@ metadata:
 spec:
   title: Sentry Enterprise
   icon: https://sentry-brand.storage.googleapis.com/sentry-glyph-black.png
+  ports:
+    - serviceName: "sentry"
+      servicePort: 9000
+      localPort: 9000
+      applicationUrl: "http://sentry"
