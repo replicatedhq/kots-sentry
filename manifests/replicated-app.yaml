@@ -5,6 +5,9 @@ metadata:
 spec:
   title: Sentry Enterprise
   icon: https://sentry-brand.storage.googleapis.com/sentry-glyph-black.png
+  releaseNotes:
+    # Sentry
+    Release Notes here
   ports:
     - serviceName: "sentry"
       servicePort: 9000
