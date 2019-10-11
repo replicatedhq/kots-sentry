@@ -7,7 +7,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: sentry-cron
+      app: sentry
   replicas: 1
   template:
     metadata:
