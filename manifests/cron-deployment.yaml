@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: sentry-cron
   labels:
-    app: sentry
+    app: sentry-cron
 spec:
   selector:
     matchLabels:
@@ -12,8 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: sentry
-        role: cron
+        app: sentry-cron
     spec:
       containers:
       - name: sentry-cron
