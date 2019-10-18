@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: sentry-worker
   labels:
-    app: sentry
+    app: sentry-worker
 spec:
   selector:
     matchLabels:
@@ -12,8 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: sentry
-        role: worker
+        app: sentry-worker
     spec:
       containers:
       - name: sentry-workers
