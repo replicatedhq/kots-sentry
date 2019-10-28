@@ -191,6 +191,10 @@ spec:
     - Various performance around event processing to make up for all the added load we're forcing on
       ya'll. =)
 
+  statusInformers:
+    - service/sentry
+    - deployment/sentry-web
+    - deployment/sentry-worker
   ports:
     - serviceName: "sentry"
       servicePort: 9000
