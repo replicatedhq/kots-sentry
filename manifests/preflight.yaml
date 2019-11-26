@@ -17,3 +17,11 @@ spec:
           - pass:
               when: ">= 1.15.0"
               message: Your cluster meets the recommended and required versions of Kubernetes.
+    - customResourceDefinition:
+        customResourceDefinitionName: deployment
+        outcomes:
+          - fail:
+              message: Kind deployment not found!
+          - pass:
+              message: Deployment kind found!
+
