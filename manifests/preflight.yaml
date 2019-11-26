@@ -31,3 +31,11 @@ spec:
               message: Docker container runtime was found.
           - fail:
               message: Did not find Docker container runtime.
+    - storageClass:
+        checkName: Required storage classes
+        storageClassName: "default"
+        outcomes:
+          - fail:
+              message: Could not find a storage class called default.
+          - pass:
+              message: All good on storage classes
