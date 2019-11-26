@@ -24,4 +24,10 @@ spec:
               message: Kind deployment not found!
           - pass:
               message: Deployment kind found!
-
+    - containerRuntime:
+        outcomes:
+          - pass:
+              when: "== docker"
+              message: Docker container runtime was found.
+          - fail:
+              message: Did not find Docker container runtime.
