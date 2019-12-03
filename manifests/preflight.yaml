@@ -94,6 +94,21 @@ spec:
               message: The `sentry-postgresql` secret was not found or the `postgres-password` key was not detected.
           - pass:
               message: The Postgres Password was found in a secret in the cluster.
+    - containerRuntime:
+        outcomes:
+          - pass:
+              when: "== docker"
+              message: Docker container runtime was found.
+          - fail:
+              message: Did not find Docker container runtime.
+    - storageClass:
+        checkName: Required storage classes
+        storageClassName: "default"
+        outcomes:
+          - fail:
+              message: Could not find a storage class called default.
+          - pass:
+              message: All good on storage classes
     - distribution:
         outcomes:
           - fail:
