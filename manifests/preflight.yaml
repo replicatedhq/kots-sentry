@@ -4,6 +4,50 @@ metadata:
   name: sentry-enterprise
 spec:
   analyzers:
+    # Fails on preflight page even though registry has been added vendor.replicated.com.
+    - imagePullSecret:
+          checkName: Has Access to index.docker.io
+          registryName: index.docker.io
+          outcomes:
+            - fail:
+                message: Cannot pull from index.docker.io
+            - pass:
+                message: Found credentials to pull from index.docker.io
+    # Fails on preflight page even though Ingress exists.
+    - ingress:
+        namespace: default
+        ingressName: sentry-ingress
+        outcomes:
+          - fail:
+              message: Sentry ingress is not working.
+          - pass:
+              message: Sentry ingress is working.
+    - deploymentStatus:
+        name: sentry-worker
+        namespace: default
+        outcomes:
+          - fail:
+              when: "< 1"
+              message: The Sentry Worker deployment does not have any ready replicas.
+          - warn:
+              when: "= 1"
+              message: The Sentry Worker deployment has only a single ready replica.
+          - pass:
+              message: There are multiple replicas of the Sentry Worker deployment ready.
+    # Is it statefulset or statefulsetStatus?
+    # Does not even show up in preflights page.
+    - statefulsetStatus:
+        name: sentry-redis-master
+        namespace: default
+        outcomes:
+          - fail:
+              when: "< 1"
+              message: The API deployment does not have any ready replicas.
+          - warn:
+              when: "= 1"
+              message: The API deployment has only a single ready replica.
+          - pass:
+              message: There are multiple replicas of the API deployment ready.
     - clusterVersion:
         outcomes:
           - fail:
@@ -18,10 +62,63 @@ spec:
               when: ">= 1.15.0"
               message: Your cluster meets the recommended and required versions of Kubernetes.
     - customResourceDefinition:
-        customResourceDefinitionName: deployment
+        customResourceDefinitionName: ingressroutes.contour.heptio.com
         outcomes:
           - fail:
-              message: Kind deployment not found!
+              message: IngressRoutes CRD not found!
           - pass:
-              message: Deployment kind found!
-
+              message: IngressRoutes CRD found!
+    - containerRuntime:
+        outcomes:
+          - pass:
+              when: "== docker"
+              message: Docker container runtime was found.
+          - fail:
+              message: Did not find Docker container runtime.
+    - storageClass:
+        checkName: Required storage classes
+        storageClassName: "default"
+        outcomes:
+          - fail:
+              message: Could not find a storage class called default.
+          - pass:
+              message: All good on storage classes
+    # Does not even show up in preflights page.
+    - secret:
+        checkName: Sentry Postgresql
+        secretName: sentry-postgresql
+        namespace: default
+        key: postgres-password
+        outcomes:
+          - fail:
+              message: The `sentry-postgresql` secret was not found or the `postgres-password` key was not detected.
+          - pass:
+              message: The Postgres Password was found in a secret in the cluster.
+    - distribution:
+        outcomes:
+          - fail:
+              when: "== docker-desktop"
+              message: The application does not support Docker Desktop Clusters
+          - fail:
+              when: "== microk8s"
+              message: The application does not support Microk8s Clusters
+          - fail:
+              when: "== minikube"
+              message: The application does not support Minikube Clusters
+          - pass:
+              when: "== eks"
+              message: EKS is a supported distribution
+          - pass:
+              when: "== gke"
+              message: GKE is a supported distribution
+          - pass:
+              when: "== aks"
+              message: AKS is a supported distribution
+          - pass:
+              when: "== kurl"
+              message: KURL is a supported distribution
+          - pass:
+              when: "== digitalocean"
+              message: DigitalOcean is a supported distribution
+          - warn:
+              message: Unable to determine the distribution of Kubernetes

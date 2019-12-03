@@ -12,6 +12,9 @@ spec:
   componentKinds:
     - group: core
       kind: Service
+    # I have no idea what I'm doing here.
+    - group: core
+      kind: Ingress
     - group: apps
       kind: Deployment
     - group: apps

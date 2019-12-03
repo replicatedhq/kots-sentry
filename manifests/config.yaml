@@ -32,8 +32,21 @@ spec:
           items:
             - name: embedded_postgres
               title: Embedded Postgres
-            - name: external_postgres
-              title: External Postgres
+            - name: external_postgres_inline
+              title: External Postgres Inline
+            - name: external_postgres_secret
+              title: External Postgres From Secret
         - name: embedded_postgres_password
+          hidden: true
           type: password
           value: "{{repl RandomString 32}}"
+        - name: external_postgres_connectionstring
+          title: Postgres Connection string
+          when: '{{repl ConfigOptionEquals "postgres_type" "external_postgres_inline"}}'
+          type: text
+          default: postgresql://user:pass@host/db
+        - name: external_postgres_secretname
+          title: Postgres Secret Name
+          help_text: Enter the name of a secret containing the key `PG_CONNSTRING`
+          when: '{{repl ConfigOptionEquals "postgres_type" "external_postgres_secret"}}'
+          type: text
