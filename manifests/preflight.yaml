@@ -4,6 +4,47 @@ metadata:
   name: sentry-enterprise
 spec:
   analyzers:
+    # Fails on preflight page even though registry has been added vendor.replicated.com.
+    - imagePullSecret:
+          checkName: Has Access to index.docker.io
+          registryName: index.docker.io
+          outcomes:
+            - fail:
+                message: Cannot pull from index.docker.io
+            - pass:
+                message: Found credentials to pull from index.docker.io
+    # Fails on preflight page even though Ingress exists.
+    - ingress:
+        ingressName: sentry-ingress
+        outcomes:
+          - fail:
+              message: Sentry ingress is not working.
+          - pass:
+              message: Sentry ingress is working.
+    - deploymentStatus:
+        name: sentry-worker
+        outcomes:
+          - fail:
+              when: "< 1"
+              message: The Sentry Worker deployment does not have any ready replicas.
+          - warn:
+              when: "= 1"
+              message: The Sentry Worker deployment has only a single ready replica.
+          - pass:
+              message: There are multiple replicas of the Sentry Worker deployment ready.
+    # Is it statefulset or statefulsetStatus?
+    # Does not even show up in preflights page.
+    - statefulsetStatus:
+        name: sentry-redis-master
+        outcomes:
+          - fail:
+              when: "< 1"
+              message: The API deployment does not have any ready replicas.
+          - warn:
+              when: "= 1"
+              message: The API deployment has only a single ready replica.
+          - pass:
+              message: There are multiple replicas of the API deployment ready.
     - clusterVersion:
         outcomes:
           - fail:
@@ -18,12 +59,22 @@ spec:
               when: ">= 1.15.0"
               message: Your cluster meets the recommended and required versions of Kubernetes.
     - customResourceDefinition:
-        customResourceDefinitionName: deployment
+        customResourceDefinitionName: ingressroutes.contour.heptio.com
         outcomes:
           - fail:
-              message: Kind deployment not found!
+              message: IngressRoutes CRD not found!
           - pass:
-              message: Deployment kind found!
+              message: IngressRoutes CRD found!
+    # Does not even show up in preflights page.
+    - secret:
+        checkName: Sentry Postgresql
+        secretName: sentry-postgresql
+        key: postgres-password
+        outcomes:
+          - fail:
+              message: The `sentry-postgresql` secret was not found or the `postgres-password` key was not detected.
+          - pass:
+              message: The Postgres Password was found in a secret in the cluster.
     - containerRuntime:
         outcomes:
           - pass:
@@ -59,6 +110,9 @@ spec:
           - pass:
               when: "== aks"
               message: AKS is a supported distribution
+          - pass:
+              when: "== kurl"
+              message: KURL is a supported distribution
           - pass:
               when: "== digitalocean"
               message: DigitalOcean is a supported distribution
