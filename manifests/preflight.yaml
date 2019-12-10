@@ -15,7 +15,6 @@ spec:
                 message: Found credentials to pull from index.docker.io
     # Fails on preflight page even though Ingress exists.
     - ingress:
-        namespace: default
         ingressName: sentry-ingress
         outcomes:
           - fail:
@@ -24,7 +23,6 @@ spec:
               message: Sentry ingress is working.
     - deploymentStatus:
         name: sentry-worker
-        namespace: default
         outcomes:
           - fail:
               when: "< 1"
@@ -38,7 +36,6 @@ spec:
     # Does not even show up in preflights page.
     - statefulsetStatus:
         name: sentry-redis-master
-        namespace: default
         outcomes:
           - fail:
               when: "< 1"
@@ -68,26 +65,10 @@ spec:
               message: IngressRoutes CRD not found!
           - pass:
               message: IngressRoutes CRD found!
-    - containerRuntime:
-        outcomes:
-          - pass:
-              when: "== docker"
-              message: Docker container runtime was found.
-          - fail:
-              message: Did not find Docker container runtime.
-    - storageClass:
-        checkName: Required storage classes
-        storageClassName: "default"
-        outcomes:
-          - fail:
-              message: Could not find a storage class called default.
-          - pass:
-              message: All good on storage classes
     # Does not even show up in preflights page.
     - secret:
         checkName: Sentry Postgresql
         secretName: sentry-postgresql
-        namespace: default
         key: postgres-password
         outcomes:
           - fail:
