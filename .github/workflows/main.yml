@@ -1,21 +1,16 @@
-name: CI
+name: Create release
 
-on:
-  push:
-   branches:
-     - master
+on: [push]
 
 jobs:
-  create-unstable-release:
+  create-release:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v1
-    - name: Create a release on the Unstable Channel
-      run: make release
-      env:
-        REPLICATED_API_TOKEN: ${{ secrets.REPLICATED_API_TOKEN }}
-        REPLICATED_APP: ${{ secrets.REPLICATED_APP }}
-
-
+    - uses: replicatedhq/action-kots-release@v0.1.0
+      name: Create the Release
+      with:
+        replicated-api-token: ${{ secrets.REPLICATED_API_TOKEN }}
+        replicated-app: ${{ secrets.REPLICATED_APP }}
