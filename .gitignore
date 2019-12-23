@@ -1,1 +1,3 @@
 built/
+deps/
+*.swp
