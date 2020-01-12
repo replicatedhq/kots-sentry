@@ -31,5 +31,7 @@ release: check-api-token check-app deps-vendor-cli
 		--yaml-dir manifests \
 		--promote $(channel) \
 		--version $(version) \
-		--release-notes $(release_notes)
+		--release-notes $(release_notes) \
+		--ensure-channel
+
 

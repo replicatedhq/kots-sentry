@@ -8,6 +8,10 @@ spec:
       title: Sentry
       description: Sentry Defaults
       items:
+        - name: hostname
+          title: Admin Username
+          type: text
+          default: 'sentry.mycompany.com'
         - name: admin_username
           title: Admin Username
           type: text
@@ -40,13 +44,23 @@ spec:
           hidden: true
           type: password
           value: "{{repl RandomString 32}}"
-        - name: external_postgres_connectionstring
-          title: Postgres Connection string
-          when: '{{repl ConfigOptionEquals "postgres_type" "external_postgres_inline"}}'
+        - name: external_postgres_host
+          title: Postgres host
+          when: '{{repl configoptionequals "postgres_type" "external_postgres_inline"}}'
           type: text
-          default: postgresql://user:pass@host/db
+          default: db.mycompany.internal
+        - name: external_postgres_port
+          title: Postgres Port
+          when: '{{repl configoptionequals "postgres_type" "external_postgres_inline"}}'
+          type: text
+          default: 5432
+        - name: external_postgres_password
+          title: Postgres Password
+          when: '{{repl configoptionequals "postgres_type" "external_postgres_inline"}}'
+          type: password
         - name: external_postgres_secretname
           title: Postgres Secret Name
           help_text: Enter the name of a secret containing the key `PG_CONNSTRING`
           when: '{{repl ConfigOptionEquals "postgres_type" "external_postgres_secret"}}'
           type: text
+

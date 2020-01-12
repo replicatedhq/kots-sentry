@@ -10,7 +10,22 @@ spec:
 
   # values are used in the customer environment, as a pre-render step
   # these values will be supplied to helm template
-  values: {}
+  values:
+    ingress:
+      enabled: true
+      hostname: repl{{ConfigOption "hostname" }}
+    metrics:
+      enabled: true
+    postgresql:
+      enabled: repl{{ if ConfigOptionEquals "postgres_type" "embedded_postgres"}}true{{repl else}}false{{repl end}}
+      nameOverride: sentry-postgresql
+      postgresqlDatabase: sentry
+      postgresqlUsername: postgres
+      postgresqlHost: repl{{ConfigOption "external_postgres_host"}}
+      postgresqlPassword: repl{{ConfigOption "external_postgres_password"}}
+      postgresqlPort: repl{{ConfigOption "external_postgres_port"}}
+
+
 
   # builder values provide a way to render the chart with all images
   # and manifests. this is used in replicated to create airgap packages
