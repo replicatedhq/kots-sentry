@@ -17,7 +17,7 @@ spec:
     metrics:
       enabled: true
     postgresql:
-      enabled: repl{{ if ConfigOptionEquals "postgres_type" "embedded_postgres"}}true{{repl else}}false{{repl end}}
+      enabled: repl{{ if ConfigOptionEquals "postgres_type" "embedded_postgres"}}truerepl{{ else }}falserepl{{ end }}
       nameOverride: sentry-postgresql
       postgresqlDatabase: sentry
       postgresqlUsername: postgres

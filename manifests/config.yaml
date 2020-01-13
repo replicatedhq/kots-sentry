@@ -46,17 +46,17 @@ spec:
           value: "{{repl RandomString 32}}"
         - name: external_postgres_host
           title: Postgres host
-          when: '{{repl configoptionequals "postgres_type" "external_postgres_inline"}}'
+          when: '{{repl ConfigOptionEquals "postgres_type" "external_postgres_inline"}}'
           type: text
           default: db.mycompany.internal
         - name: external_postgres_port
           title: Postgres Port
-          when: '{{repl configoptionequals "postgres_type" "external_postgres_inline"}}'
+          when: '{{repl ConfigOptionEquals "postgres_type" "external_postgres_inline"}}'
           type: text
-          default: 5432
+          default: '5432'
         - name: external_postgres_password
           title: Postgres Password
-          when: '{{repl configoptionequals "postgres_type" "external_postgres_inline"}}'
+          when: '{{repl ConfigOptionEquals "postgres_type" "external_postgres_inline"}}'
           type: password
         - name: external_postgres_secretname
           title: Postgres Secret Name
