@@ -1,7 +1,7 @@
 apiVersion: kots.io/v1beta1
 kind: HelmChart
 metadata:
-  name: gitlab
+  name: sentry
 spec:
   # chart identifies a matching chart from a .tgz
   chart:
