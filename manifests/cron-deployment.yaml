@@ -28,18 +28,18 @@ spec:
               name: sentry
               key: sentry-secret
         - name: SENTRY_DB_USER
-          value: "sentry"
+          value: '{{repl if ConfigOptionEquals "postgres_type" "postgres_type_embedded"}}sentry{{repl else}}{{repl ConfigOption "external_postgres_user" }}{{repl end}}'
         - name: SENTRY_DB_NAME
-          value: "sentry"
+          value: '{{repl if ConfigOptionEquals "postgres_type" "postgres_type_embedded"}}sentry{{repl else}}{{repl ConfigOption "external_postgres_db" }}{{repl end}}'
         - name: SENTRY_DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: sentry-postgresql
               key: postgres-password
         - name: SENTRY_POSTGRES_HOST
-          value: sentry-postgresql
+          value: '{{repl if ConfigOptionEquals "postgres_type" "postgres_type_embedded"}}sentry-postgres{{repl else}}{{repl ConfigOption "external_postgres_host"}}{{repl end}}'
         - name: SENTRY_POSTGRES_PORT
-          value: "5432"
+          value: '{{repl if ConfigOptionEquals "postgres_type" "postgres_type_embedded"}}5432{{repl else}}{{repl ConfigOption "external_postgres_port" }}{{repl end}}'
         - name: SENTRY_REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
