@@ -9,12 +9,10 @@ spec:
         key: uri
         includeValue: false
     - logs:
+        collectorName: sentry-all
+        name: sentry/logs
         selector:
-          - app=sentry
-          - role=worker
-        limits:
-          maxAge: 30d
-          maxLines: 10000
+          - component=sentry
     - run:
         collectorName: ping-google
         image: flungo/netutils
