@@ -15,6 +15,7 @@ spec:
       labels:
         role: slave
         app: redis
+        component: sentry
     spec:
       securityContext:
         fsGroup: 1001

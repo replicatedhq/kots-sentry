@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         app: sentry-worker
+        component: sentry
     spec:
       containers:
       - name: sentry-workers

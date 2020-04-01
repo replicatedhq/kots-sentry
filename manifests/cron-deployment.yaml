@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         app: sentry-cron
+        component: sentry
     spec:
       containers:
       - name: sentry-cron
