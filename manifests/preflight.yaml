@@ -79,3 +79,51 @@ spec:
               message: DigitalOcean is a supported distribution
           - warn:
               message: Unable to determine the distribution of Kubernetes
+    - nodeResources:
+        checkName: Must have at least 3 nodes in the cluster
+        outcomes:
+        - fail:
+            when: "count() < 3"
+            message: This application requires at least 3 nodes.
+            uri: https://kurl.sh/docs/install-with-kurl/adding-nodes
+        - warn:
+            when: "count() < 5"
+            message: This application recommends at last 5 nodes.
+            uri: https://kurl.sh/docs/install-with-kurl/adding-nodes
+        - pass:
+            message: This cluster has enough nodes.
+    - nodeResources:
+        checkName: Every node in the cluster must have at least 32Gi of memory
+        outcomes:
+        - fail:
+            when: "min(memoryCapacity) < 10Gi"
+            message: All nodes must have at least 10 GB of memory.
+            uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+        - warn:
+            when: "min(memoryCapacity) < 32Gi"
+            message: All nodes are recommended to have at least 32 GB of memory.
+            uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+        - pass:
+            message: All nodes have at least 32 GB of memory.
+    - nodeResources:
+        checkName: Total CPU Cores in the cluster is 4 or greater
+        outcomes:
+          - fail:
+              when: "sum(cpuCapacity) < 4"
+              message: The cluster must contain at least 4 cores
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+          - pass:
+              message: There are at least 4 cores in the cluster
+    - nodeResources:
+        checkName: Every node in the cluster must have at least 40 GB of ephemeral storage
+        outcomes:
+        - fail:
+            when: "min(ephemeralStorageCapacity) < 40Gi"
+            message: All nodes must have at least 40 GB of ephemeral storage.
+            uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+        - warn:
+            when: "min(ephemeralStorageCapacity) < 100Gi"
+            message: All nodes are recommended to have at least 100 GB of ephemeral storage.
+            uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+        - pass:
+            message: All nodes have at least 100 GB of ephemeral storage.
