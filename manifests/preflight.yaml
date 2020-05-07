@@ -4,17 +4,6 @@ metadata:
   name: sentry-enterprise
 spec:
   analyzers:
-    - deploymentStatus:
-        name: sentry-worker
-        outcomes:
-          - fail:
-              when: "< 1"
-              message: The Sentry Worker deployment does not have any ready replicas.
-          - warn:
-              when: "= 1"
-              message: The Sentry Worker deployment has only a single ready replica.
-          - pass:
-              message: There are multiple replicas of the Sentry Worker deployment ready.
     - clusterVersion:
         outcomes:
           - fail:
