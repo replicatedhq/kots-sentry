@@ -69,7 +69,7 @@ spec:
           - warn:
               message: Unable to determine the distribution of Kubernetes
     - nodeResources:
-        checkName: Must have at least 3 nodes in the cluster
+        checkName: Must have at least 3 nodes in the cluster, with 5 recommended
         outcomes:
         - fail:
             when: "count() < 3"
@@ -82,7 +82,7 @@ spec:
         - pass:
             message: This cluster has enough nodes.
     - nodeResources:
-        checkName: Every node in the cluster must have at least 32Gi of memory
+        checkName: Every node in the cluster must have at least 10 GB of memory, with 32 GB recommended
         outcomes:
         - fail:
             when: "min(memoryCapacity) < 10Gi"
@@ -104,7 +104,7 @@ spec:
           - pass:
               message: There are at least 4 cores in the cluster
     - nodeResources:
-        checkName: Every node in the cluster must have at least 40 GB of ephemeral storage
+        checkName: Every node in the cluster must have at least 40 GB of ephemeral storage, with 100 GB recommended
         outcomes:
         - fail:
             when: "min(ephemeralStorageCapacity) < 40Gi"
