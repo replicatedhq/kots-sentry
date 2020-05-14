@@ -4,7 +4,10 @@ metadata:
   name: "sentry-user-create"
   labels:
     app: sentry
+  annotations:
+    "kots.io/hook-delete-policy": "hook-succeeded, hook-failed"
 spec:
+  backoffLimit: 12 # Because it takes about 6 minutes for DB to come up and migration job to run. This will ensure the job is re-tried a few more times than default.
   template:
     metadata:
       name: "sentry-user-create"
@@ -24,18 +27,18 @@ spec:
               name: sentry
               key: sentry-secret
         - name: SENTRY_DB_USER
-          value: "sentry"
+          value: '{{repl if ConfigOptionEquals "postgres_type" "embedded_postgres"}}sentry{{repl else}}{{repl ConfigOption "external_postgres_user" }}{{repl end}}'
         - name: SENTRY_DB_NAME
-          value: "sentry"
+          value: '{{repl if ConfigOptionEquals "postgres_type" "embedded_postgres"}}sentry{{repl else}}{{repl ConfigOption "external_postgres_db" }}{{repl end}}'
         - name: SENTRY_DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: sentry-postgresql
               key: postgres-password
         - name: SENTRY_POSTGRES_HOST
-          value: sentry-postgresql
+          value: '{{repl if ConfigOptionEquals "postgres_type" "embedded_postgres"}}sentry-postgresql{{repl else}}{{repl ConfigOption "external_postgres_host"}}{{repl end}}'
         - name: SENTRY_POSTGRES_PORT
-          value: "5432"
+          value: '{{repl if ConfigOptionEquals "postgres_type" "embedded_postgres"}}5432{{repl else}}{{repl ConfigOption "external_postgres_port" }}{{repl end}}'
         - name: SENTRY_REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
