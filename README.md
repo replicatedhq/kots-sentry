@@ -6,7 +6,7 @@ This is a working demo for packaging Sentry as a Kots application.
 
 ## Installing the example
 
-There is a license file in this repo that can be used to install Sentry with KOTS from the perspective on an end user. For an existing cluster install, simple point `kubectl` at your cluster, then follow the steps:
+There is a license file in this repo that can be used to install Sentry with KOTS from the perspective of an end user. For an existing cluster install, simply point `kubectl` at your cluster, then follow the steps:
 
 1. Install the `kots` plugin:
 
