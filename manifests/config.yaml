@@ -6,7 +6,7 @@ spec:
   groups:
     - name: sentry
       title: Sentry
-      description: Sentry Defaults
+      description: Sentry Defaults Values
       items:
         - name: admin_username
           title: Admin Username
