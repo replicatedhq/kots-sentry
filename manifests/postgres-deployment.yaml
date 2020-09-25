@@ -17,6 +17,10 @@ spec:
       labels:
         app: postgresql
         component: sentry
+      annotations: 
+        pre.hook.backup.velero.io/command: '["/bin/bash", "-c", "PGPASSWORD=$POSTGRES_PASSWORD pg_dump -U $POSTGRES_USER -d $POSTGRES_DB -h 127.0.0.1 > /backup/backup.sql"]'
+        pre.hook.backup.velero.io/timeout: 3m
+        backup.velero.io/backup-volumes: postgres-backup  
     spec:
       containers:
       - name: sentry-postgresql
@@ -72,7 +76,12 @@ spec:
         - name: data
           mountPath: /var/lib/postgresql/data/pgdata
           subPath: postgresql-db
+        - name: postgres-backup
+          mountPath: /backup 
       volumes:
       - name: data
         persistentVolumeClaim:
           claimName: sentry-postgresql
+      - name: postgres-backup
+        persistentVolumeClaim:
+          claimName: sentry-backup
