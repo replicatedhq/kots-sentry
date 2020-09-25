@@ -1,4 +1,4 @@
-channel := fcc-backup-test
+channel := beta
 app_slug := "${REPLICATED_APP}"
 version := "0.1.0-dev-${USER}"
 release_notes := "CLI release by ${USER} on $(shell date)"
