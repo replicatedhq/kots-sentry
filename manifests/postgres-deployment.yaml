@@ -83,4 +83,4 @@ spec:
         persistentVolumeClaim:
           claimName: sentry-postgresql
       - name: postgres-backup
-        emptyDir:{}
+        emptyDir: {}
