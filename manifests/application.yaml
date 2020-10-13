@@ -22,9 +22,6 @@ spec:
   descriptor:
     version: "9.1.1"
     description: "Open-source error tracking with full stacktraces & asynchronous context."
-    icons:
-      - src: "https://sentry-brand.storage.googleapis.com/sentry-glyph-black.png"
-        type: "image/png"
     type: "sentry"
     links:
       - description: Open Sentry Enterprise
