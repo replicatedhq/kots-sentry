@@ -1,8 +1,34 @@
-channel := Beta
 app_slug := "${REPLICATED_APP}"
-version := "0.1.0-dev-${USER}"
-release_notes := "CLI release by ${USER} on $(shell date)"
 SHELL := /bin/bash -o pipefail
+
+# Generate channel and release notes. We need to do this differently for github actions vs. command line because of how git works differently in GH actions.
+ifeq ($(origin GITHUB_ACTIONS), undefined)
+release_notes := "CLI release of $(shell git symbolic-ref HEAD) triggered by ${shell git config --global user.name}: $(shell basename $$(git remote get-url origin) .git) [SHA: $(shell git rev-parse HEAD)]"
+channel := $(shell git rev-parse --abbrev-ref HEAD)
+else
+release_notes := "GitHub Action release of ${GITHUB_REF} triggered by ${GITHUB_ACTOR}: [$(shell echo $${GITHUB_SHA::7})](https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA})"
+channel := ${GITHUB_BRANCH_NAME}
+endif
+
+
+# If we're on the master channel, translate that to the "Beta" channel
+ifeq ($(channel), master)
+channel := Beta
+endif
+#
+# If we're on the main channel, translate that to the "Beta" channel
+ifeq ($(channel), main)
+channel := Beta
+endif
+#
+# If we're on the unstable channel, translate that to the "Unstable" channel
+ifeq ($(channel), unstable)
+channel := Unstable
+endif
+
+# version based on branch/channel
+version := $(channel)-$(shell git rev-parse HEAD | head -c7)$(shell git diff --no-ext-diff --quiet --exit-code || echo "-dirty")
+
 
 .PHONY: deps-vendor-cli
 deps-vendor-cli: dist = $(shell echo `uname` | tr '[:upper:]' '[:lower:]')
