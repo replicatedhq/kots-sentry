@@ -11,17 +11,17 @@ channel := ${GITHUB_BRANCH_NAME}
 endif
 
 
-# If we're on the master channel, translate that to the "Unstable" channel
+# If we're on the master channel, translate that to the "Beta" channel
 ifeq ($(channel), master)
 channel := Beta
 endif
 #
-# If we're on the main channel, translate that to the "Unstable" channel
+# If we're on the main channel, translate that to the "Beta" channel
 ifeq ($(channel), main)
 channel := Beta
 endif
 #
-# If we're on the master channel, translate that to the "Unstable" channel
+# If we're on the unstable channel, translate that to the "Unstable" channel
 ifeq ($(channel), unstable)
 channel := Unstable
 endif
