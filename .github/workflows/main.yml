@@ -4,6 +4,8 @@ on:
   push:
    branches:
      - unstable
+     - master
+     - main
 
 jobs:
   create-unstable-release:
