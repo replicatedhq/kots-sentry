@@ -9,16 +9,7 @@ spec:
   selector:
     matchLabels:
      app.kubernetes.io/name: "sentry"
-  componentKinds:
-    - group: core
-      kind: Service
-    # I have no idea what I'm doing here.
-    - group: core
-      kind: Ingress
-    - group: apps
-      kind: Deployment
-    - group: apps
-      kind: StatefulSet
+  componentKinds: []
   descriptor:
     version: "9.1.1"
     description: "Open-source error tracking with full stacktraces & asynchronous context."

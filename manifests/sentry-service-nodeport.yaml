@@ -5,12 +5,13 @@ metadata:
   labels:
     app: sentry
   annotations:
-    kots.io/when: "{{repl not IsKurl}}"
+    kots.io/when: "{{repl IsKurl}}"
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
   - port: 9000
     targetPort: 9000
+    nodePort: 9000
     protocol: TCP
     name: sentry
   selector:

@@ -5,6 +5,15 @@ metadata:
 spec:
   title: Sentry Enterprise
   icon: https://sentry-brand.storage.googleapis.com/sentry-glyph-black.png
+  statusInformers:
+    - service/sentry
+    - deployment/sentry-web
+    - deployment/sentry-worker
+  ports:
+    - serviceName: "sentry"
+      servicePort: 9000
+      localPort: 9000
+      applicationUrl: "http://sentry"
   releaseNotes: |
     Version 9.1.1
     -------------
@@ -191,12 +200,3 @@ spec:
     - Various performance around event processing to make up for all the added load we're forcing on
       ya'll. =)
 
-  statusInformers:
-    - service/sentry
-    - deployment/sentry-web
-    - deployment/sentry-worker
-  ports:
-    - serviceName: "sentry"
-      servicePort: 9000
-      localPort: 9000
-      applicationUrl: "http://sentry"
