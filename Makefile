@@ -43,10 +43,10 @@ deps-vendor-cli:
 	  echo '-> Downloading Replicated CLI to ./deps '; \
 	  mkdir -p deps/; \
 	  curl -s https://api.github.com/repos/replicatedhq/replicated/releases/latest \
-	  | grep "browser_download_url.*$(dist)_amd64.tar.gz" \
+	  | grep "browser_download_url.*darwin_amd64.tar.gz" \
 	  | cut -d : -f 2,3 \
 	  | tr -d \" \
-	  | wget -O- -qi - \
+	  | xargs curl -L \
 	  | tar xvz -C deps; \
 	fi
 
