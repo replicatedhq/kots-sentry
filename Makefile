@@ -46,7 +46,7 @@ deps-vendor-cli:
 	  | grep "browser_download_url.*$(dist)_amd64.tar.gz" \
 	  | cut -d : -f 2,3 \
 	  | tr -d \" \
-	  | wget -O- -qi - \
+	  | xargs curl -L \
 	  | tar xvz -C deps; \
 	fi
 
