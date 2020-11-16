@@ -1,0 +1,32 @@
+apiversion: cluster.kurl.sh/v1beta1
+kind: Installer
+metadata:
+  name: ""
+spec:
+  contour:
+    version: latest
+  docker:
+    version: latest
+  kotsadm:
+    version: latest
+  kubernetes:
+    version: latest
+  prometheus:
+    version: latest
+  registry:
+    version: latest
+  ekco:
+    version: latest
+    nodeUnreachableToleration: 1m
+  velero:
+    version: latest
+  minio:
+    version: latest
+  openebs:
+    version: latest
+    namespace: "openebs"
+    isLocalPVEnabled: true
+    localPVStorageClassName: default
+  weave:
+    version: latest
+
