@@ -21,6 +21,11 @@ spec:
           type: password
           hidden: true
           value: "{{repl RandomString 40}}"
+        - name: worker_replicas
+          title: Worker Replicas
+          type: text
+          default: 2
+          required: true
     - name: database
       title: Database
       description: Database Options
