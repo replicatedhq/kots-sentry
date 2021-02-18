@@ -36,6 +36,7 @@ spec:
     # Fails on preflight page even though Ingress exists.
     - ingress:
         ingressName: sentry-ingress
+        namespace: '{{repl Namespace}}'
         outcomes:
           - fail:
               message: Sentry ingress is not working.
@@ -43,6 +44,7 @@ spec:
               message: Sentry ingress is working.
     - deploymentStatus:
         name: sentry-worker
+        namespace: '{{repl Namespace}}'
         outcomes:
           - fail:
               when: "< 1"
@@ -56,6 +58,7 @@ spec:
     # Does not even show up in preflights page.
     - statefulsetStatus:
         name: sentry-redis-master
+        namespace: '{{repl Namespace}}'
         outcomes:
           - fail:
               when: "< 1"
@@ -73,4 +76,6 @@ spec:
               uri: https://www.kubernetes.io
           - warn:
               when: "< 1.15.0"
+          - pass:
+              message: "Your version of Kubernetes is OK"
 
