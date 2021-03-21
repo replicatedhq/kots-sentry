@@ -24,24 +24,22 @@ spec:
         get:
           url: https://api.replicated.com/market/v1/echo/ip
   analyzers:
-    # Fails on preflight page even though registry has been added vendor.replicated.com.
     - imagePullSecret:
-        checkName: Has Access to index.docker.io
+        checkName: Access to index.docker.io
         registryName: index.docker.io
         outcomes:
           - fail:
-              message: Cannot pull from index.docker.io
+              message: Could not find index.docker.io imagePullSecret
           - pass:
-              message: Found credentials to pull from index.docker.io
-    # Fails on preflight page even though Ingress exists.
+              message: Found credentials to pull private images from index.docker.io
     - ingress:
         ingressName: sentry-ingress
         namespace: '{{repl Namespace}}'
         outcomes:
           - fail:
-              message: Sentry ingress is not working.
+              message: Sentry ingress is missing or not ready.
           - pass:
-              message: Sentry ingress is working.
+              message: Sentry ingress is ready.
     - deploymentStatus:
         name: sentry-worker
         namespace: '{{repl Namespace}}'
@@ -51,23 +49,21 @@ spec:
               message: The Sentry Worker deployment does not have any ready replicas.
           - warn:
               when: "= 1"
-              message: The Sentry Worker deployment has only a single ready replica.
+              message: "Degraded: The Sentry Worker deployment has only a single ready replica."
           - pass:
               message: There are multiple replicas of the Sentry Worker deployment ready.
-    # Is it statefulset or statefulsetStatus?
-    # Does not even show up in preflights page.
     - statefulsetStatus:
         name: sentry-redis-master
         namespace: '{{repl Namespace}}'
         outcomes:
           - fail:
               when: "< 1"
-              message: The API deployment does not have any ready replicas.
+              message: No Redis Replicas available
           - warn:
               when: "= 1"
-              message: The API deployment has only a single ready replica.
+              message: "Degraded: Redis statefulset has only a single ready replica."
           - pass:
-              message: There are multiple replicas of the API deployment ready.
+              message: There are multiple replicas of Redis ready.
     - clusterVersion:
         outcomes:
           - fail:
@@ -78,4 +74,42 @@ spec:
               when: "< 1.15.0"
           - pass:
               message: "Your version of Kubernetes is OK"
-
+    - nodeResources:
+        checkName: Allocatable Storage
+        outcomes:
+          - fail:
+              when: "max(ephemeralStorageAllocatable) < 10Gi"
+              message: No Node has more than 10Gi storage allocatable
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+          - warn:
+              when: "max(ephemeralStorageAllocatable) < 20Gi"
+              message: No Node has more than 20Gi storage allocatable
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+          - pass:
+              message: All nodes have at least 20 GB of allocatable ephemeral storage.
+    - nodeResources:
+        checkName: Allocatable Memory
+        outcomes:
+          - fail:
+              when: "max(memoryAllocatable) < 1Gi"
+              message: All nodes have less than 1Gi allocatable memory
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+          - warn:
+              when: "max(memoryAllocatable) < 2Gi"
+              message: All nodes have less than 1Gi allocatable memory
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+          - pass:
+              message: All nodes have at least 2 Gi of allocatable memory
+    - nodeResources:
+        checkName: Allocatable CPU
+        outcomes:
+          - fail:
+              when: "max(cpuAllocatable) < 500m"
+              message: All nodes have less than 500m allocatable CPU
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+          - warn:
+              when: "max(cpuAllocatable) < 1"
+              message: All nodes have less than 1 allocatable CPU
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+          - pass:
+              message: All nodes have at least 2 allocatable CPUs

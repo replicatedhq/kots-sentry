@@ -4,41 +4,56 @@ metadata:
   name: sentry-enterprise
 spec:
   analyzers:
-    - clusterVersion:
+    - nodeResources:
+        checkName: Cluster Node Count
         outcomes:
           - fail:
-              when: "< 1.13.0"
-              message: Sentry requires at Kubernetes 1.13.0 or later, and recommends 1.15.0.
-              uri: https://www.kubernetes.io
+              when: "count() < 3"
+              message: Sentry Requires a least 3 nodes, with 5 recommended
+              uri: https://kurl.sh/docs/install-with-kurl/adding-nodes
           - warn:
-              when: "< 1.15.0"
-              message: Your cluster meets the minimum version of Kubernetes, but we recommend you update to 1.15.0 or later.
-              uri: https://kubernetes.io
+              when: "count() < 5"
+              message: Sentry Requires a least 3 nodes, with 5 recommended
+              uri: https://kurl.sh/docs/install-with-kurl/adding-nodes
           - pass:
-              when: ">= 1.15.0"
-              message: Your cluster meets the recommended and required versions of Kubernetes.
-    - customResourceDefinition:
-        customResourceDefinitionName: ingressroutes.contour.heptio.com
+              message: This cluster has enough nodes
+    - nodeResources:
+        checkName: Cluster Memory
         outcomes:
           - fail:
-              message: IngressRoutes CRD not found!
+              when: "sum(memoryAllocatable) < 10Gi"
+              message: Sentry Requires 10Gi allocatable memory, with 32Gi recommended
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+          - warn:
+              when: "sum(memoryAllocatable) < 32Gi"
+              message: Sentry Requires 10Gi allocatable memory, with 32Gi recommended
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
           - pass:
-              message: IngressRoutes CRD found!
-    - containerRuntime:
-        outcomes:
-          - pass:
-              when: "== docker"
-              message: Docker container runtime was found.
-          - fail:
-              message: Did not find Docker container runtime.
-    - storageClass:
-        checkName: Required storage classes
-        storageClassName: "default"
+              message: Cluster has at least 32 Gi of memory
+    - nodeResources:
+        checkName: Cluster CPU
         outcomes:
           - fail:
-              message: Could not find a storage class called default.
+              when: "sum(cpuCapacity) < 4"
+              message: The cluster must contain at least 4 cores
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
           - pass:
-              message: All good on storage classes
+              message: There are at least 4 cores in the cluster
+    - nodeResources:
+        checkName: Node Ephemeral Storage
+        outcomes:
+          - fail:
+              when: "min(ephemeralStorageAllocatable) < 40Gi"
+              message: Sentry requires 40GB of allocatable ephemeral storage per node, (100GB recommended)
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+          - warn:
+              when: "min(ephemeralStorageAllocatable) < 100Gi"
+              message: Sentry requires 40GB of allocatable ephemeral storage per node, (100GB recommended)
+              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+          - pass:
+              message: All nodes have at least 100 GB of allocatable ephemeral storage
+    # Example check to demonstrate what's possible.
+    # kots-sentry technically supports all these distros
     - distribution:
         outcomes:
           - fail:
@@ -59,7 +74,6 @@ spec:
           - pass:
               when: "== aks"
               message: AKS is a supported distribution
-          # Will be supported in the future
           - pass:
               when: "== kurl"
               message: KURL is a supported distribution
@@ -68,51 +82,52 @@ spec:
               message: DigitalOcean is a supported distribution
           - warn:
               message: Unable to determine the distribution of Kubernetes
-    - nodeResources:
-        checkName: Must have at least 3 nodes in the cluster, with 5 recommended
-        outcomes:
-        - fail:
-            when: "count() < 3"
-            message: This application requires at least 3 nodes.
-            uri: https://kurl.sh/docs/install-with-kurl/adding-nodes
-        - warn:
-            when: "count() < 5"
-            message: This application recommends at last 5 nodes.
-            uri: https://kurl.sh/docs/install-with-kurl/adding-nodes
-        - pass:
-            message: This cluster has enough nodes.
-    - nodeResources:
-        checkName: Every node in the cluster must have at least 10 GB of memory, with 32 GB recommended
-        outcomes:
-        - fail:
-            when: "min(memoryCapacity) < 10Gi"
-            message: All nodes must have at least 10 GB of memory.
-            uri: https://kurl.sh/docs/install-with-kurl/system-requirements
-        - warn:
-            when: "min(memoryCapacity) < 32Gi"
-            message: All nodes are recommended to have at least 32 GB of memory.
-            uri: https://kurl.sh/docs/install-with-kurl/system-requirements
-        - pass:
-            message: All nodes have at least 32 GB of memory.
-    - nodeResources:
-        checkName: Total CPU Cores in the cluster is 4 or greater
+    - clusterVersion:
+        checkName: Kubernetes Version
         outcomes:
           - fail:
-              when: "sum(cpuCapacity) < 4"
-              message: The cluster must contain at least 4 cores
-              uri: https://kurl.sh/docs/install-with-kurl/system-requirements
+              when: "< 1.13.0"
+              message: Sentry requires at Kubernetes 1.13.0 or later, and recommends 1.15.0
+              uri: https://www.kubernetes.io
+          - warn:
+              when: "< 1.15.0"
+              message: Your cluster meets the minimum version of Kubernetes, but we recommend you update to 1.15.0 or later
+              uri: https://kubernetes.io
           - pass:
-              message: There are at least 4 cores in the cluster
-    - nodeResources:
-        checkName: Every node in the cluster must have at least 40 GB of ephemeral storage, with 100 GB recommended
+              when: ">= 1.15.0"
+              message: Your cluster meets the recommended and required versions of Kubernetes
+    - containerRuntime:
+        checkName: Container Runtime
         outcomes:
-        - fail:
-            when: "min(ephemeralStorageCapacity) < 40Gi"
-            message: All nodes must have at least 40 GB of ephemeral storage.
-            uri: https://kurl.sh/docs/install-with-kurl/system-requirements
-        - warn:
-            when: "min(ephemeralStorageCapacity) < 100Gi"
-            message: All nodes are recommended to have at least 100 GB of ephemeral storage.
-            uri: https://kurl.sh/docs/install-with-kurl/system-requirements
-        - pass:
-            message: All nodes have at least 100 GB of ephemeral storage.
+          - pass:
+              when: "== docker"
+              message: Docker is a supported runtime
+          - pass:
+              when: "== containerd"
+              message: ContainerD is a supported runtime
+          - fail:
+              message: Sentry only supports docker and containerd as container runtimes
+    - storageClass:
+        checkName: Storage Class
+        storageClassName: "default"
+        outcomes:
+          - fail:
+              message: Could not find a storage class called default
+          - pass:
+              message: Default storage class found
+    - customResourceDefinition:
+        customResourceDefinitionName: ingressroutes.contour.heptio.com
+        checkName: IngressRoute CRD
+        outcomes:
+          - fail:
+              message: ingressroutes.contour.heptio.com CRD not present
+          - pass:
+              message: ingressroutes.contour.heptio.com CRD available
+    - imagePullSecret:
+        checkName: Access to index.docker.io
+        registryName: index.docker.io
+        outcomes:
+          - fail:
+              message: Could not find index.docker.io imagePullSecret
+          - pass:
+              message: Found credentials to pull private images from index.docker.io
