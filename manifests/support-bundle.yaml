@@ -96,7 +96,7 @@ spec:
               uri: https://kurl.sh/docs/install-with-kurl/system-requirements
           - warn:
               when: "max(memoryAllocatable) < 2Gi"
-              message: All nodes have less than 1Gi allocatable memory
+              message: All nodes have less than 2Gi allocatable memory
               uri: https://kurl.sh/docs/install-with-kurl/system-requirements
           - pass:
               message: All nodes have at least 2 Gi of allocatable memory
@@ -112,4 +112,4 @@ spec:
               message: All nodes have less than 1 allocatable CPU
               uri: https://kurl.sh/docs/install-with-kurl/system-requirements
           - pass:
-              message: All nodes have at least 2 allocatable CPUs
+              message: All nodes have at least 1 allocatable CPUs
