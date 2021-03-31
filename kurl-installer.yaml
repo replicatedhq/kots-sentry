@@ -5,7 +5,7 @@ metadata:
 spec:
   contour:
     version: latest
-  docker:
+  containerd:
     version: latest
   kotsadm:
     version: latest
