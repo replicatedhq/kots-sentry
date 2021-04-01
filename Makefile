@@ -82,3 +82,8 @@ release: check-api-token check-app deps-vendor-cli lint
 		--release-notes $(release_notes) \
 		--ensure-channel
 
+.PHONY: kurl
+kurl: check-api-token check-app deps-vendor-cli lint
+	deps/replicated installer create \
+		--app ${app_slug} \
+		--yaml kurl-installer.yaml
