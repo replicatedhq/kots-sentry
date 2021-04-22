@@ -6,6 +6,7 @@ on:
      - unstable
      - master
      - main
+     - rke
 
 jobs:
   create-unstable-release:
