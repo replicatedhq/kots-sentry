@@ -1,32 +1,21 @@
-apiversion: cluster.kurl.sh/v1beta1
+apiVersion: kurl.sh/v1beta1
 kind: Installer
 metadata:
-  name: ""
+  name: 'sentry'
 spec:
-  contour:
-    version: latest
-  docker:
-    version: latest
-  kotsadm:
-    version: latest
-  kubernetes:
-    version: latest
-  prometheus:
-    version: latest
+  rke2:
+    version: "v1.19.7+rke2r1"
   registry:
-    version: latest
-  ekco:
-    version: latest
-    nodeUnreachableToleration: 1m
-  velero:
-    version: latest
-  minio:
-    version: latest
+    version: "2.7.1"
+  kotsadm:
+    version: "1.29.1"
+    uiBindPort: 30880
   openebs:
-    version: latest
-    namespace: "openebs"
+    version: "1.12.0"
     isLocalPVEnabled: true
     localPVStorageClassName: default
-  weave:
-    version: latest
-
+    isCstorEnabled: false
+  minio:
+    version: "2020-01-25T02-50-51Z"
+  velero:
+    version: "1.5.1"
