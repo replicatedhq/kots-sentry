@@ -6,6 +6,7 @@ on:
      - unstable
      - master
      - main
+     - amits-stable
 
 jobs:
   create-unstable-release:
