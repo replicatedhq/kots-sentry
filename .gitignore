@@ -3,3 +3,4 @@ deps/
 *.swp
 sentry-pro
 .DS_Store
+.envrc
