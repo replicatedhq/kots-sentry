@@ -18,6 +18,13 @@ spec:
         component: sentry
     spec:
       serviceAccountName: "default"
+      initContainers:
+      - name: hpe
+        image: busybox
+        command: ["sh", "-c", "chown -R 1001:1001 /bitnami/redis/data"]
+        volumeMounts:
+        - name: redis-data
+          mountPath: "/bitnami/redis/data"
       containers:
       - name: sentry-redis
         image: "docker.io/bitnami/redis:4.0.11-debian-9"
