@@ -17,17 +17,7 @@ spec:
         app: redis
         component: sentry
     spec:
-      securityContext:
-        fsGroup: 1001
-        runAsUser: 1001
       serviceAccountName: "default"
-      initContainers:
-      - name: hpe
-        image: busybox
-        command: ["sh", "-c", "chmod 777 /bitnami/redis/data"]
-        volumeMounts:
-        - name: redis-data
-          mountPath: "/bitnami/redis/data"
       containers:
       - name: sentry-redis
         image: "docker.io/bitnami/redis:4.0.11-debian-9"
