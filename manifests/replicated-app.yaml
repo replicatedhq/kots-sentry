@@ -12,7 +12,7 @@ spec:
   ports:
     - serviceName: "sentry"
       servicePort: 9000
-      localPort: 9000
+      localPort: 9900
       applicationUrl: "http://sentry"
   releaseNotes: |
     Version 9.1.1
