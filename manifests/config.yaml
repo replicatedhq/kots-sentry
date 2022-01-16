@@ -11,7 +11,7 @@ spec:
         - name: admin_username
           title: Admin Username
           type: text
-          default: 'Admin'
+          default: 'amit'
         - name: admin_password
           title: Admin Password
           type: password
