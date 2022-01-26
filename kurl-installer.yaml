@@ -1,7 +1,7 @@
 apiversion: cluster.kurl.sh/v1beta1
 kind: Installer
 metadata:
-  name: ""
+  name: "sentry"
 spec:
   contour:
     version: latest
@@ -22,11 +22,8 @@ spec:
     version: latest
   minio:
     version: latest
-  openebs:
+  longhorn:
     version: latest
-    namespace: "openebs"
-    isLocalPVEnabled: true
-    localPVStorageClassName: default
   weave:
     version: latest
 
