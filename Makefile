@@ -86,4 +86,4 @@ release: check-api-token check-app deps-vendor-cli lint
 kurl: check-api-token check-app deps-vendor-cli lint
 	deps/replicated installer create \
 		--app ${app_slug} \
-		--yaml-file kurl-installer.yaml
+		--auto -y
