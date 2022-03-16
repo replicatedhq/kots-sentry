@@ -18,7 +18,7 @@ spec:
         image: flungo/netutils
         command: ["ping"]
         args: ["www.google.com"]
-        timeout: 5s
+        timeout: 10s
     - http:
         collectorName: echo-ip
         get:
