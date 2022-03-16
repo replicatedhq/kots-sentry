@@ -11,11 +11,11 @@ spec:
         - name: admin_username
           title: Admin Username
           type: text
-          default: 'noam2'
+          default: 'amit'
         - name: admin_password
           title: Admin Password
           type: password
-          default: 'password'
+          default: 'pa55word'
         - name: secret_key
           title: Secret Key
           type: password
