@@ -9,7 +9,7 @@ spec:
     matchLabels:
       role: slave
       app: redis
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
