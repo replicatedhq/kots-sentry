@@ -1,29 +1,26 @@
-apiversion: cluster.kurl.sh/v1beta1
-kind: Installer
-metadata:
-  name: "sentry"
-spec:
-  contour:
-    version: latest
-  containerd:
-    version: latest
-  kotsadm:
-    version: latest
-  kubernetes:
-    version: latest
-  prometheus:
-    version: latest
-  registry:
-    version: latest
-  ekco:
-    version: latest
-    nodeUnreachableToleration: 1m
-  velero:
-    version: latest
-  minio:
-    version: latest
-  longhorn:
-    version: latest
-  weave:
-    version: latest
-
+apiVersion: "cluster.kurl.sh/v1beta1"
+kind: "Installer"
+metadata: 
+  name: "4fd6b68"
+spec: 
+  kubernetes: 
+    version: "1.24.x"
+  weave: 
+    version: "2.6.x"
+  prometheus: 
+    version: "0.57.x"
+  registry: 
+    version: "2.7.x"
+  containerd: 
+    version: "1.5.x"
+  velero: 
+    version: "1.9.x"
+  kotsadm: 
+    version: "1.74.x"
+    applicationSlug: "sentry-pro"
+    disableS3: true
+    uiBindPort: 8800
+  ekco: 
+    version: "latest"
+  longhorn: 
+    version: "1.2.x"
