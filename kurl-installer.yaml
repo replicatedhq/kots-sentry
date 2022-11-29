@@ -11,7 +11,7 @@ spec:
     version: latest
     disableS3: true
   kubernetes:
-    version: 1.2
+    version: 1.25.x
   prometheus:
     version: latest
   registry:
