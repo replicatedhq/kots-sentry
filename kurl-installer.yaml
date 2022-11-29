@@ -9,8 +9,9 @@ spec:
     version: latest
   kotsadm:
     version: latest
+    disableS3: true
   kubernetes:
-    version: latest
+    version: 1.2
   prometheus:
     version: latest
   registry:
@@ -20,10 +21,10 @@ spec:
     nodeUnreachableToleration: 1m
   velero:
     version: latest
-  minio:
-    version: latest
-  longhorn:
-    version: latest
+  openebs: 
+    version: "3.3.x"
+    isLocalPVEnabled: true
+    localPVStorageClassName: "default"
   weave:
     version: latest
 
