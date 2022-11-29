@@ -21,10 +21,8 @@ spec:
     nodeUnreachableToleration: 1m
   velero:
     version: latest
-  openebs: 
-    version: "3.3.x"
-    isLocalPVEnabled: true
-    localPVStorageClassName: "default"
+  rook: 
+    version: "1.9.x"
   weave:
     version: latest
 
